@@ -1,0 +1,28 @@
+name: Build macOS App
+
+on: [push]
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller openpyxl
+
+      - name: Build .app
+        run: |
+          pyinstaller --onefile --windowed --name "CopyFile" CopyFile.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CopyFile-macOS
+          path: dist/
